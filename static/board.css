@@ -1,0 +1,200 @@
+
+:root {
+    --board-menu-fore: #202020;
+    --board-menu-back: rgba(255, 255, 255, 0.8);
+    --board-back: rgb(36, 64, 36);
+    --ease-circular: cubic-bezier(.08,.82,.17,1);
+    --board-stroke: white;
+    --board-menu-height: 72px;
+    --board-menu-button-width: 80px;
+    --board-menu-dither: rgba(0, 0, 0, 0.2);
+}
+
+.board {
+    display: grid;
+    grid-template:
+        ". . ." calc(var(--board-menu-height) + 8px)
+        ". . ." calc(100% - var(--board-menu-height) * 2 - 16px)
+        ". . ." calc(var(--board-menu-height) + 8px) /
+        auto auto 14em;
+}
+.board--maximized {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.board__canvas {
+    grid-area: 1 / 1 / 4 / 4;
+    background-color: var(--board-back);
+}
+.board__pad {
+    grid-area: 1 / 1 / 4 / 4;
+    background-color: transparent;
+}
+.board__logo {
+    grid-area: 1 / 1 / 4 / 4;
+    opacity: 0.03;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+.board__menu {
+    grid-area: 3 / 1 / 4 / 4;
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: space-between;
+    background-color: transparent;
+    margin: 0 8px 8px 8px;
+}
+.board__submenu {
+    height: var(--board-menu-height);
+    border-radius: 8px;
+    display: flex;
+    background-color: var(--board-menu-back);
+}
+.board__menu-button {
+    height: var(--board-menu-height);
+    width: var(--board-menu-button-width);
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    text-align: center;
+    transition-property: background-color, transform;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+}
+.board__menu-button > svg {
+    margin: 4px auto;
+}
+.board__menu-button:active {
+    transform: scale(0.9);
+}
+.board__menu-button--selected {
+    background-color: var(--board-menu-dither);
+}
+.board__menu-button--hidden {
+    display: none;
+}
+.board__menu-page-count {
+    font-size: 1.5em;
+}
+.board__options {
+    grid-area: 3 / 1 / 3 / 4;
+    display: flex;
+    justify-content: center;
+}
+.board__options--hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.board__menu-options {
+    position: absolute;
+    width: 20em;
+    height: auto;
+    bottom: var(--board-menu-height);
+    margin: 1em;
+    padding: 1em;
+    border-radius: 8px;
+    background-color: var(--board-menu-back);
+    color: var(--board-menu-fore);
+    transform: scale(1);
+    opacity: 1;
+    transition-property: opacity, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+.board__menu-options--hidden {
+    pointer-events: none;
+    transform: scale(0.5);
+    opacity: 0;
+}
+
+.board__links {
+    grid-area: 2 / 3 / 3 / 4;
+    margin: auto 8px;
+    padding: 0.8em 1em;
+    border-radius: 8px;
+    background-color: var(--board-menu-back);
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 13em;
+    white-space: nowrap;
+    justify-self: end;
+    transition-property: width, height;
+    transition-duration: 0.3s;
+    transition-timing-function: var(--ease-circular);
+}
+.board__links--folded {
+    width: var(--board-menu-button-width);
+    height: var(--board-menu-height);
+    padding: 0;
+    overflow-y: hidden;
+}
+.board__link {
+    display: flex;
+    width: 12em;
+    align-items: center;
+    margin-top: 8px;
+}
+.board__link:any-link {
+    color: var(--board-menu-fore);
+    text-decoration: none;
+}
+.board__link::after {
+    content: '➤';
+}
+.board__link__label {
+    margin: 0 6px;
+}
+
+.board__dl {
+    display: block;
+    margin: 4px 0;
+}
+.board__dt,
+.board__dd {
+    display: inline-block;
+    margin: 4px;
+    vertical-align: middle;
+}
+.board__input {
+    display: inline-block;
+    margin: 0 4px;
+    width: 8em;
+    font: inherit;
+}
+
+.board__eraser-sprite {
+    position: absolute;
+    pointer-events: none;
+    background-color: var(--board-menu-back);
+    transition: opacity 0.3s ease-out;
+}
+.board__eraser-sprite--hidden {
+    opacity: 0;
+}
+
+.board__color-palette__palette,
+.board__weight-palette__palette {
+    display: inline-block;
+    margin: 2px;
+    padding: 0;
+    border: 2px solid transparent;
+    background-color: transparent;
+    width: 3em;
+    height: 2em;
+    text-align: center;
+}
+.board__color-palette__palette--selected,
+.board__weight-palette__palette--selected {
+    border: 2px solid var(--board-menu-fore);
+}
+.board__weight-palette__palette > div {
+    display: inline-block;
+    width: 2em;
+    vertical-align: middle;
+}
