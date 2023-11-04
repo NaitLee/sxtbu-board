@@ -44,14 +44,17 @@
 .board__menu {
     grid-area: 3 / 1 / 4 / 4;
     display: flex;
-    /* flex-wrap: wrap; */
     justify-content: space-between;
     background-color: transparent;
-    margin: 0 8px 8px 8px;
+    margin: 0;
+    padding: 0 4px;
+    max-width: 100%;
+    overflow: auto;
 }
 .board__submenu {
     height: var(--board-menu-height);
     border-radius: 8px;
+    margin: 0 4px;
     display: flex;
     background-color: var(--board-menu-back);
 }
@@ -75,6 +78,9 @@
 }
 .board__menu-button--selected {
     background-color: var(--board-menu-dither);
+}
+.board__menu-button--blank {
+    background-color: transparent;
 }
 .board__menu-button--hidden {
     display: none;
@@ -197,4 +203,42 @@
     display: inline-block;
     width: 2em;
     vertical-align: middle;
+}
+
+@media (max-width: 960px) {
+    :root {
+        --board-menu-height: 64px;
+        --board-menu-button-width: 72px;
+    }
+    .board {
+        font-size: small;
+    }
+}
+
+@media (max-width: 840px) {
+    .board {
+        grid-template: 
+            ". . ." 25vh
+            ". . ." 25vh
+            ". . ." 50vh /
+            calc(var(--board-menu-height) + 8px) calc(100% - var(--board-menu-height) - 8px - 14em) 14em;
+    }
+    .board .icon {
+        width: 28px;
+        height: 28px;
+    }
+    .board__links {
+        grid-area: 3 / 3 / 4 / 4;
+    }
+    .board__menu {
+        grid-area: 1 / 1 / 4 / 2;
+        flex-flow: column;
+        padding: var(--board-menu-height) 0;
+    }
+    .board__submenu {
+        flex-flow: column;
+        margin: 4px 0;
+        width: var(--board-menu-button-width);
+        height: unset;
+    }
 }
