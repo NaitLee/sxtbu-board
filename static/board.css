@@ -231,6 +231,7 @@
     opacity: 0;
     transform: scale(0.5);
     pointer-events: none;
+    max-height: 90vw;
     transition-property: opacity, transform;
     transition-duration: 0.5s;
     transition-timing-function: ease;
@@ -271,6 +272,10 @@
     }
     .board {
         font-size: 0.9em;
+    }
+    .board__share {
+        margin: calc(var(--board-menu-height) + 16px);
+        margin-right: 8px;
     }
 }
 
