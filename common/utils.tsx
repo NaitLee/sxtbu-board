@@ -21,7 +21,7 @@ export function point(x: number, y: number): Point {
 }
 
 export function offsetPoints(points: Point[], offset: Point) {
-    return points.map(p => (p.x === 0 && p.y === 0 ? p : { x: p.x + offset.x, y: p.y + offset.y }));
+    return points.map(p => (p.x === 0 && p.y === 0 ? p : { x: p.x - offset.x, y: p.y - offset.y }));
 }
 
 export function filterPoints(points: Point[], c: Point, r: number) {
@@ -62,6 +62,20 @@ export function new_stroke(): Stroke {
 
 export function new_page(): BoardPage {
     return { strokes: [], offset: { x: 0, y: 0 } };
+}
+
+export function offset(a: Point, b: Point) {
+    a.x -= b.x;
+    a.y -= b.y;
+    return a;
+}
+
+export function randstr() {
+    return crypto && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString();
+}
+
+export function randcode(digits: number) {
+    return (Math.random() * Math.pow(10, digits) | 0).toString().padStart(digits, '0');
 }
 
 // deno-lint-ignore no-explicit-any

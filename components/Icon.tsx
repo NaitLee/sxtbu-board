@@ -17,6 +17,7 @@ import IconAdjustmentsHorizontal from "https://deno.land/x/tabler_icons_tsx@0.0.
 import IconArrowsMaximize from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/arrows-maximize.tsx";
 import IconArrowsMinimize from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/arrows-minimize.tsx";
 import IconCloudShare from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/cloud-share.tsx";
+import IconLocationShare from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/location-share.tsx";
 
 export type IconKey = keyof typeof Icons;
 
@@ -46,6 +47,7 @@ export const Icons = {
     'arrows-maximize': IconArrowsMaximize,
     'arrows-minimize': IconArrowsMinimize,
     'cloud-share': IconCloudShare,
+    'location-share': IconLocationShare,
 };
 
 export default function Icon(props: IconProps) {
