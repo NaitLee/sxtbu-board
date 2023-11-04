@@ -17,6 +17,5 @@ export default function MemoPath({ stroke }: MemoPathProps) {
             d += (p.x === 0 && p.y === 0 || q.x === 0 && q.y === 0 ? ' M ' : ' L ') + p.x + ',' + p.y;
         }
         return <path d={d} stroke={stroke.color} stroke-width={stroke.weight} />;
-        // the path hardly change if these don't change
-    }, [stroke.color, stroke.weight, stroke.points.length /* , stroke.points */ ]);
+    }, [stroke.color, stroke.weight, stroke.points.length, stroke.points ]);
 }
