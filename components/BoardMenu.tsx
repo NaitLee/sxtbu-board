@@ -21,7 +21,7 @@ export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
         (value: any) =>
             dispatch({ [key]: wrapper(value) });
     return <>
-        <div class={toggleClassName("board__options", { '--hidden': state.options === '' })}>
+        <div class="board__options">
             <MenuOptions visible={state.options_on && state.options === 'pen'}>
                 <MenuOption label="颜色">
                     <ColorPalette colors={PEN_COLORS} dispatch={mkcall('color')} />
@@ -37,7 +37,8 @@ export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
                     ? <BoardButton icon="arrows-minimize" label="全屏" value="" onClick={mkevcb('fullscreen')} />
                     : <BoardButton icon="arrows-maximize" label="全屏" value="1" onClick={mkevcb('fullscreen')} />
                 }
-                {/* <BoardButton icon="cloud-share" label="分享" onClick={mkdispatch('share')} /> */}
+                <BoardButton icon="cloud-share" label="分享" onClick={mkevcb('share')} />
+                {/* <BoardButton icon="location-share" label="加入" onClick={mkevcb('join')} /> */}
                 <BoardButton icon="trash-x" label="清除" onClick={mkevcb('clear')} />
             </div>
             <div class="board__submenu">

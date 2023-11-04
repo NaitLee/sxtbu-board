@@ -1,11 +1,10 @@
-import { Head } from "$fresh/runtime.ts";
-import Board from "../islands/Board.tsx";
+import { Status, type HandlerContext } from "$fresh/server.ts";
+import { randcode } from "../common/utils.tsx";
 
-export default function Home() {
-    return <>
-        <Head>
-            <title>工商白板</title>
-        </Head>
-        <Board maximize={true} logo="/watermark.svg" css_path="/board.css" />
-    </>;
+export const handler = (req: Request, _ctx: HandlerContext): Response => {
+    const name = randcode(6);
+    return new Response(null, {
+        status: Status.Found,
+        headers: { 'Location': '/' + name }
+    });
 }

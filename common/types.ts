@@ -19,6 +19,7 @@ export interface BoardState {
     page: number;
     fullscreen: boolean;
     eraser_size: number;
+    share_on: boolean;
 }
 
 export interface Point {
@@ -47,7 +48,6 @@ export interface BoardPadEvent {
     start?: boolean;
     points?: Point[][];
     move?: Point;
-    move_done?: boolean;
     toggle_erase?: boolean;
     eraser_size?: number;
     erase?: Point;
@@ -59,4 +59,20 @@ export interface BoardMenuEvent extends Partial<BoardState> {
     undo?: boolean;
     clear?: boolean;
     share?: boolean;
+    join?: boolean;
+}
+
+export interface BoardSyncData {
+    queue?: number;
+    identifier?: string;
+    data?: BoardData;
+    stroke?: Stroke;
+    erase?: Point[];
+    clear?: boolean;
+    undo?: boolean;
+    // move?: Point;
+    page?: number;
+    new_page?: boolean;
+    resync_request?: boolean;
+    resync_response?: boolean;
 }

@@ -55,7 +55,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
     const [points, set_points] = useState<Point[][]>([]);
     const ref_touchcount = useRef(0);
     const ref_touchmap = useRef<Record<number, number>>({});
-    const [first_point, set_first_point] = useState<Point>(point(0, 0));
+    const [last_point, set_last_point] = useState<Point>(point(0, 0));
     const [pen_down, set_pen_down] = useState(false);
     const update_points = (id: number, new_point: Point) => {
         if (!points[id]) points[id] = [point(0, 0)];
@@ -74,11 +74,12 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
         },
         'pen': {
             down(args) {
+                dispatch({ start: true });
                 if (args.length === 1 && args[0].is_touch === false) {
                     // mouse
                     const { x, y } = args[0];
                     update_points(0, point(x, y));
-                    set_first_point(point(x, y));
+                    set_last_point(point(x, y));
                     set_pen_down(true);
                     return;
                 }
@@ -95,9 +96,8 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                     ref_touchmap.current[id] = index;
                 }
                 const p = args[0];
-                set_first_point(point(p.x, p.y));
+                set_last_point(point(p.x, p.y));
                 set_pen_down(true);
-                dispatch({ start: true });
             },
             move(args) {
                 if (!pen_down) return;
@@ -139,16 +139,16 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
             down(args) {
                 const p = args[0];
                 set_pen_down(true);
-                set_first_point(point(p.x, p.y));
+                set_last_point(point(p.x, p.y));
             },
             move(args) {
                 if (!pen_down) return;
                 const p = args[0];
-                dispatch({ move: point(p.x - first_point.x, p.y - first_point.y) });
+                dispatch({ move: point(p.x - last_point.x, p.y - last_point.y) });
+                set_last_point(point(p.x, p.y));
             },
             up(args) {
-                dispatch({ move_done: true });
-                set_first_point(point(0, 0));
+                set_last_point(point(0, 0));
                 set_pen_down(false);
             }
         },
@@ -160,7 +160,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
             },
             move(args) {
                 if (!pen_down) return;
-                const { x, y, ex, ey } = args[0];
+                const { x, y } = args[0];
                 dispatch({
                     erase: point(x, y),
                     eraser_size: MIN_ERASER_SIZE // Math.max(ex, ey, MIN_ERASER_SIZE)

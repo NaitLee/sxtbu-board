@@ -1,22 +1,27 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import BoardCanvas from "../components/BoardCanvas.tsx";
 import BoardMenu from "../components/BoardMenu.tsx";
 import BoardPad from "../components/BoardPad.tsx";
-import { BoardMenuEvent, BoardPadEvent, BoardState, Point } from "../common/types.ts";
+import { BoardMenuEvent, BoardPadEvent, BoardState, BoardSyncData, Point, Stroke } from "../common/types.ts";
 import { BoardData } from "../common/types.ts";
-import { BLANK_IMG_URL, DEF_STROKE_COLOR, DEF_STROKE_WEIGHT, MIN_ERASER_SIZE, filterPoints, new_page, offsetPoints, point, toggleClassName, updateObject } from "../common/utils.tsx";
+import { BLANK_IMG_URL, DEF_STROKE_COLOR, DEF_STROKE_WEIGHT, MIN_ERASER_SIZE, filterPoints, new_page, offset, offsetPoints, point, toggleClassName, updateObject } from "../common/utils.tsx";
 import BoardLinks from "../components/BoardLinks.tsx";
 import EraserSprite from "../components/EraserSprite.tsx";
+import { IS_BROWSER } from "$fresh/runtime.ts";
+import { BoardSyncClient } from "../common/sync-client.ts";
+import BoardShare from "../components/BoardShare.tsx";
 
 interface BoardProps {
+    name: string;
     maximize?: boolean;
     css_path?: string;
     width?: number;
     height?: number;
     logo?: string;
+    api?: string;
 }
 
-export default function Board({ maximize, css_path, width, height, logo }: BoardProps) {
+export default function Board({ maximize, css_path, width, height, logo, name, api }: BoardProps) {
     const [state, set_state] = useState<BoardState>({
         color: DEF_STROKE_COLOR,
         weight: DEF_STROKE_WEIGHT,
@@ -25,13 +30,25 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
         options_on: false,
         page: 0,
         fullscreen: false,
-        eraser_size: MIN_ERASER_SIZE
+        eraser_size: MIN_ERASER_SIZE,
+        share_on: false,
     });
     const [data, set_data] = useState<BoardData>({
         pages: [updateObject({}, new_page())],
         state: state
     });
     const [page, set_page] = useState(data.pages[state.page]);
+    set_page(data.pages[state.page]);
+    const goto_page = (n: number) => {
+        state.page = n;
+        data.pages[n] = data.pages[n] || new_page();
+        // set_page(data.pages[n]);
+    }
+    const insert_page = (n: number) => {
+        state.page = n;
+        data.pages.splice(n, 0, new_page());
+        // set_page(data.pages[n]);
+    }
     const [size, set_size] = useState<Point>({
         x: width || self.innerWidth || 0,
         y: height || self.innerHeight || 0
@@ -40,6 +57,60 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
         x: size.x / 2,
         y: size.y / 2
     });
+    // just for syncing
+    const [erase_points, set_erase_points] = useState<Point[]>([]);
+    const ref_sync_client = useRef<BoardSyncClient>();
+    const sync = (data: BoardSyncData) => {
+        if (!ref_sync_client.current) return;
+        ref_sync_client.current.send(Object.assign(data, { page: state.page }));
+    };
+    useEffect(() => {
+        if (!name || !IS_BROWSER) return;
+        ref_sync_client.current = new BoardSyncClient(name, api || '/api/sync?name=', (sdata) => {
+            const n = sdata.page!;
+            let page = data.pages[n] || new_page();
+            for (const key in sdata) {
+                switch (key) {
+                    /*
+                    case 'resync_request':
+                        sync({ resync_response: true, data: data });
+                        break;
+                    */
+                    case 'data':
+                        set_data(updateObject(sdata, sdata.data!));
+                        set_state(sdata.data!.state);
+                        break;
+                    case 'stroke':
+                        page.strokes.push(sdata.stroke!);
+                        break;
+                    case 'page':
+                        // free to view any page
+                        data.pages[n] = page;
+                        break;
+                    case 'new_page':
+                        // always new
+                        page = new_page();
+                        data.pages.splice(n, 0, page);
+                        break;
+                    case 'move':
+                        // move is client side, not synced
+                        break;
+                    case 'undo':
+                        page.strokes.pop();
+                        break;
+                    case 'clear':
+                        page.strokes = [];
+                        break;
+                    case 'erase':
+                        for (const point of sdata.erase!)
+                            for (const stroke of page.strokes)
+                                stroke.points = filterPoints(stroke.points, offset(point, page.offset), state.eraser_size / 2);
+                        break;
+                }
+            }
+            set_page(updateObject({}, page));
+        });
+    }, []);
     const ref_board = useRef<HTMLDivElement | null>(null);
     if (maximize)
         useEffect(() => self.addEventListener('resize', () => set_size({
@@ -57,33 +128,33 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
         for (const key in event) {
             switch (key) {
                 case 'start':
-                    state.options_on = false;
+                    state.options_on = state.share_on = false;
                     break;
                 case 'points':
                     for (const points of event.points!) {
-                        page.strokes.push({
+                        const stroke: Stroke = {
                             points: offsetPoints(points, page.offset),
                             color: state.color,
                             weight: state.weight
-                        });
+                        };
+                        page.strokes.push(stroke);
+                        sync({ stroke: stroke });
                     }
                     break;
                 case 'move':
-                    page.offset = event.move!;
-                    break;
-                case 'move_done':
-                    for (const stroke of page.strokes)
-                        stroke.points = offsetPoints(stroke.points, page.offset);
-                    page.offset = point(0, 0);
+                    page.offset.x += event.move!.x;
+                    page.offset.y += event.move!.y;
                     break;
                 case 'toggle_erase':
                     state.mode = 'erase';
                     break;
                 case 'erase':
+                    offset(event.erase!, page.offset);
                     set_eraser_p(event.erase!);
                     for (let i = 0; i < page.strokes.length; ++i) {
                         const stroke = page.strokes[i];
                         stroke.points = filterPoints(stroke.points, event.erase!, state.eraser_size / 2);
+                        set_erase_points(erase_points.concat(event.erase!));
                         if (stroke.points.length === 0)
                             page.strokes.splice(i, 1);
                     }
@@ -93,6 +164,8 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
                     break;
                 case 'erase_done':
                     state.mode = 'pen';
+                    sync({ erase: erase_points });
+                    set_erase_points([]);
                     break;
             }
             set_page(updateObject({}, page));
@@ -110,20 +183,25 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
                         new_state.options_on = false;
                     break;
                 case 'page':
-                    data.pages[event.page!] = data.pages[event.page!] || updateObject({}, new_page());
-                    set_page(data.pages[new_state.page]);
+                    goto_page(event.page!);
+                    sync({ page: event.page! });
                     break;
                 case 'new_page':
-                    data.pages.splice(event.page!, 0, updateObject({}, new_page()));
-                    set_page(data.pages[new_state.page]);
+                    insert_page(event.page!)
+                    sync({ page: event.page!, new_page: true });
                     break;
                 case 'undo':
                     page.strokes.pop();
                     set_page(updateObject({}, page));
+                    sync({ undo: true });
                     break;
                 case 'clear':
                     page.strokes = [];
                     set_page(updateObject({}, page));
+                    sync({ clear: true });
+                    break;
+                case 'share':
+                    new_state.share_on = !new_state.share_on;
                     break;
             }
         }
@@ -136,8 +214,9 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
         <BoardCanvas page={page} size={size} />
         <BoardPad dispatch={board_pad_dispatch} size={size} state={state} />
         <EraserSprite show={state.mode === 'erase'} size={state.eraser_size} offset={eraser_p} />
-        <img class="board__logo" src={logo || BLANK_IMG_URL} />
+        <div class="board__logo" style={'background-image:url(\'' + (logo || BLANK_IMG_URL) + '\')'}></div>
         <BoardLinks stroke_count={page.strokes.length} />
+        <BoardShare name={name} visible={state.share_on} />
         <BoardMenu state={state} dispatch={board_menu_dispatch} />
     </div>;
 }
