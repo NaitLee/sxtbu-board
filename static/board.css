@@ -246,6 +246,7 @@
     .board__menu {
         grid-area: 1 / 1 / 4 / 2;
         flex-flow: column;
+        justify-content: space-around;
         padding: var(--board-menu-height) 0;
     }
     .board__submenu {

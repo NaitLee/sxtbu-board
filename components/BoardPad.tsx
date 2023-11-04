@@ -87,7 +87,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                     if (Math.max(ex, ey) > THR_TOGGLE_ERASER) {
                         dispatch({
                             toggle_erase: true,
-                            eraser_size: Math.max(ex, ey, MIN_ERASER_SIZE)
+                            eraser_size: MIN_ERASER_SIZE // Math.max(ex, ey, MIN_ERASER_SIZE)
                         });
                     }
                     const index = ref_touchcount.current++;
@@ -163,7 +163,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                 const { x, y, ex, ey } = args[0];
                 dispatch({
                     erase: point(x, y),
-                    eraser_size: Math.max(ex, ey, MIN_ERASER_SIZE)
+                    eraser_size: MIN_ERASER_SIZE // Math.max(ex, ey, MIN_ERASER_SIZE)
                 });},
             up(args) {
                 dispatch({ erase_done: true });
