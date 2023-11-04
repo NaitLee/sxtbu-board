@@ -1,6 +1,7 @@
 import { useRef, useState } from "preact/hooks";
-import { BoardMode, BoardPadEvent, BoardState, Point, Stroke } from "../common/types.ts";
-import { MIN_ERASER_SIZE, THR_TOGGLE_ERASER, point, strokeToPathD, updateObject } from "../common/utils.tsx";
+import { BoardMode, BoardPadEvent, BoardState, Point } from "../common/types.ts";
+import { MIN_ERASER_SIZE, THR_TOGGLE_ERASER, point } from "../common/utils.tsx";
+import MemoPath from "./MemoPath.tsx";
 
 interface BoardPadProps {
     dispatch: (event: BoardPadEvent) => void;
@@ -96,6 +97,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                 const p = args[0];
                 set_first_point(point(p.x, p.y));
                 set_pen_down(true);
+                dispatch({ start: true });
             },
             move(args) {
                 if (!pen_down) return;
@@ -199,6 +201,6 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
         onTouchStart={ontouchstart} onTouchMove={ontouchmove} onTouchEnd={ontouchend} onTouchCancel={ontouchend}
         onMouseDown={onmousedown} onMouseMove={onmousemove} onMouseUp={onmouseup}
     >
-        {points.map(points => strokeToPathD({ points: points, color: state.color, weight: state.weight }))}
+        {points.map(points => <MemoPath stroke={{ points: points, color: state.color, weight: state.weight }} />)}
     </svg>;
 }

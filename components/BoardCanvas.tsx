@@ -1,5 +1,5 @@
 import { BoardPage, Point } from "../common/types.ts";
-import { strokeToPathD } from "../common/utils.tsx";
+import MemoPath from "./MemoPath.tsx";
 
 interface BoardCanvasProps {
     page: BoardPage;
@@ -12,7 +12,7 @@ export default function BoardCanvas({ page, size }: BoardCanvasProps) {
         stroke-linecap="round" stroke-linejoin="round" fill="none"
     >
         <g style={`transform:translate(${page.offset.x}px,${page.offset.y}px)`}>
-            {page.strokes.map(strokeToPathD)}
+            {page.strokes.map(stroke => <MemoPath stroke={stroke} />)}
         </g>
     </svg>;
 }

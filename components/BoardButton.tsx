@@ -15,7 +15,7 @@ export default function BoardButton({ icon, label, onClick, selected, hidden, va
     return <button onClick={onClick} value={value} onContextMenu={preventdefault} onDblClick={preventdefault}
         class={toggleClassName('board__menu-button', { '--selected': selected, '--hidden': hidden })}
     >
-        <Icon name={icon} size={32} />
+        <Icon name={icon} />
         <span>{label}</span>
     </button>;
 }

@@ -9,7 +9,7 @@ export const PEN_COLORS = [
     DEF_STROKE_COLOR, 'red', 'blue', 'green'
 ];
 export const PEN_WEIGHTS = [
-    2, 4, 6, 8, 12, 24
+    2, 4, 6, 8, 10, 12, 14, 16
 ];
 
 export function updateObject<T, K>(a: T, b: K): T & K {
@@ -71,17 +71,3 @@ export function toggleClassName(name: string, toggles: { [suffix: string]: any }
             name += ' ' + name + suffix;
     return name;
 }
-
-export function strokeToPathD(stroke: Stroke) {
-    const points = stroke.points;
-    if (points.length === 0) return <path />;
-    const a = points[0];
-    let d = 'M ' + a.x + ',' + a.y;
-    for (let i = 1; i < points.length; ++i) {
-        const p = points[i];
-        const q = points[i - 1];
-        d += (p.x === 0 && p.y === 0 || q.x === 0 && q.y === 0 ? ' M ' : ' L ') + p.x + ',' + p.y;
-    }
-    return <path d={d} stroke={stroke.color} stroke-width={stroke.weight} />
-}
-

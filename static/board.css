@@ -26,6 +26,11 @@
     top: 0;
 }
 
+.board .icon {
+    width: 32px;
+    height: 32px;
+}
+
 .board__canvas {
     grid-area: 1 / 1 / 4 / 4;
     background-color: var(--board-back);
@@ -100,7 +105,7 @@
 .board__menu-options {
     position: absolute;
     pointer-events: all;
-    width: 20em;
+    width: 24em;
     height: auto;
     bottom: var(--board-menu-height);
     margin: 1em;
@@ -168,6 +173,13 @@
     margin: 4px;
     vertical-align: middle;
 }
+.board__dt {
+    min-width: 5em;
+    text-align: end;
+}
+.board__dd {
+    max-width: 15em;
+}
 .board__input {
     display: inline-block;
     margin: 0 4px;
@@ -212,7 +224,7 @@
         --board-menu-button-width: 72px;
     }
     .board {
-        font-size: small;
+        font-size: 0.9em;
     }
 }
 

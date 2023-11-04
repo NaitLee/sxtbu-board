@@ -56,6 +56,9 @@ export default function Board({ maximize, css_path, width, height, logo }: Board
     const board_pad_dispatch = (event: BoardPadEvent) => {
         for (const key in event) {
             switch (key) {
+                case 'start':
+                    state.options_on = false;
+                    break;
                 case 'points':
                     for (const points of event.points!) {
                         page.strokes.push({

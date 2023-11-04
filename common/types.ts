@@ -44,6 +44,7 @@ export type BoardOptionsKey = '' | BoardMode | 'tools';
 export type StuffType = 'img';
 
 export interface BoardPadEvent {
+    start?: boolean;
     points?: Point[][];
     move?: Point;
     move_done?: boolean;

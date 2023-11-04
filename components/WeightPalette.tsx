@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { toggleClassName } from "../common/utils.tsx";
+import { DEF_STROKE_WEIGHT, toggleClassName } from "../common/utils.tsx";
 
 interface WeightPaletteProps {
     weights: number[];
@@ -7,7 +7,7 @@ interface WeightPaletteProps {
 }
 
 export default function WeightPalette({ weights, dispatch }: WeightPaletteProps) {
-    const [selected, set_selected] = useState<number>(weights[0]);
+    const [selected, set_selected] = useState<number>(DEF_STROKE_WEIGHT);
     const onclick = (event: Event) => {
         //@ts-ignore:
         const value = parseFloat(event.currentTarget.value);
