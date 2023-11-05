@@ -11,6 +11,7 @@ import { IS_BROWSER } from "$fresh/runtime.ts";
 import { BoardSyncClient } from "../common/sync-client.ts";
 import BoardShare from "../components/BoardShare.tsx";
 import BoardJoin from "../components/BoardJoin.tsx";
+import BoardTheme from "../components/BoardTheme.tsx";
 
 interface BoardProps {
     name: string;
@@ -34,6 +35,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         eraser_size: MIN_ERASER_SIZE,
         share_on: false,
         join_on: false,
+        theme: ''
     });
     const [data, set_data] = useState<BoardData>({
         pages: [updateObject({}, new_page())],
@@ -215,6 +217,9 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                     new_state.join_on = !new_state.join_on;
                     new_state.share_on = false;
                     break;
+                case 'theme':
+                    new_state.theme = event.theme!;
+                    break;
             }
         }
         set_state(new_state);
@@ -223,6 +228,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         style={size.x && size.y ? `width:${size.x}px;height:${size.y}px` : 'width:100%;height:100%;'}
     >
         <link rel="stylesheet" href={css_path || '/board.css'} />
+        <BoardTheme name={state.theme} />
         <BoardCanvas page={page} size={size} />
         <BoardPad dispatch={board_pad_dispatch} size={size} state={state} />
         <div class="board__logo" style={'background-image:url(\'' + (logo || BLANK_IMG_URL) + '\')'}></div>

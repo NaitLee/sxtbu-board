@@ -3,7 +3,7 @@ import { JSX } from "preact/jsx-runtime";
 import { BoardMenuEvent, BoardState } from "../common/types.ts";
 import BoardButton from "./BoardButton.tsx";
 import MenuOptions from "./MenuOptions.tsx";
-import { PEN_COLORS, PEN_WEIGHTS, toggleClassName } from "../common/utils.tsx";
+import { PEN_COLORS, PEN_WEIGHTS, THEMES } from "../common/utils.tsx";
 import ColorPalette from "./ColorPalette.tsx";
 import MenuOption from "./MenuOption.tsx";
 import WeightPalette from "./WeightPalette.tsx";
@@ -29,6 +29,9 @@ export default function BoardMenu({ state, dispatch, load_complete }: BoardMenuP
                 </MenuOption>
                 <MenuOption label="粗细">
                     <WeightPalette weights={PEN_WEIGHTS} dispatch={mkcall('weight', parseFloat)} />
+                </MenuOption>
+                <MenuOption label="主题">
+                    <ColorPalette colors={Object.keys(THEMES)} dispatch={mkcall('theme')} />
                 </MenuOption>
             </MenuOptions>
         </div> : void 0}

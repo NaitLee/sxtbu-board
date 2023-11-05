@@ -21,6 +21,7 @@ export interface BoardState {
     eraser_size: number;
     share_on: boolean;
     join_on: boolean;
+    theme: string;
 }
 
 export interface Point {
@@ -61,6 +62,7 @@ export interface BoardMenuEvent extends Partial<BoardState> {
     clear?: boolean;
     share?: boolean;
     join?: boolean;
+    theme?: string;
 }
 
 export interface BoardSyncData {

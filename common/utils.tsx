@@ -15,6 +15,13 @@ export const PEN_WEIGHTS = [
     2, 4, 6, 8, 10, 12, 14, 16
 ];
 
+export const THEMES = {
+    'rgb(36, 64, 36)': ['rgb(36, 64, 36)', '#fdfdfd', 'none'],
+    '#202020': ['#202020', '#fdfdfd', 'none'],
+    '#faf9de': ['#faf9de', '#484848', 'invert(1)'],
+    '#eaeaef': ['#eaeaef', '#202020', 'invert(1)'],
+};
+
 export function updateObject<T, K>(a: T, b: K): T & K {
     return Object.assign({}, a, b);
 }
