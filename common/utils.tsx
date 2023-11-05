@@ -6,7 +6,8 @@ export const BLANK_IMG_URL = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2
 export const MIN_ERASER_SIZE = 120;
 export const THR_TOGGLE_ERASER = 2;
 export const PEN_COLORS = [
-    DEF_STROKE_COLOR, 'red', 'blue', 'green'
+    DEF_STROKE_COLOR, 'red', '#3333ff', '#00ff00',
+    '#ff00ff', 'yellow', 'orange', 'cyan',
 ];
 export const PEN_WEIGHTS = [
     2, 4, 6, 8, 10, 12, 14, 16
