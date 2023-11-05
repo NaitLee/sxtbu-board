@@ -1,5 +1,7 @@
 import { BoardPage, Point, Stroke } from "./types.ts";
 
+export const INDEX_SPECIFY_SESSION_NAME = true;
+export const SESSION_NAME_LEN = 6;
 export const DEF_STROKE_COLOR = 'var(--board-stroke)';
 export const DEF_STROKE_WEIGHT = 4;
 export const BLANK_IMG_URL = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"></svg>';
