@@ -1,6 +1,5 @@
 
 import type { BoardData, BoardSyncData } from "./types.ts";
-import { randstr } from "./utils.tsx";
 
 /** in minutes */
 const SESSION_LIFE = 1 * 60;

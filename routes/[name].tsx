@@ -5,7 +5,8 @@ import Board from "../islands/Board.tsx";
 
 export default function Home({ url }: { url: URL }) {
     const name = url.pathname.slice(1) || randcode(6);
-    if (!getSyncServer(name)) new BoardSyncServer(name);
+    if (name && name.length > 4 && !name.includes('/') && name.split('').every(c => '0123456789'.includes(c)) && !getSyncServer(name))
+        new BoardSyncServer(name);
     return <>
         <Head>
             <title>工商白板</title>

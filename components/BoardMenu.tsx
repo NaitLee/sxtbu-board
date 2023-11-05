@@ -11,9 +11,10 @@ import WeightPalette from "./WeightPalette.tsx";
 interface BoardMenuProps {
     state: BoardState;
     dispatch: (state: BoardMenuEvent) => void;
+    load_complete?: boolean;
 }
 
-export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
+export default function BoardMenu({ state, dispatch, load_complete }: BoardMenuProps) {
     const mkevcb = (key: keyof BoardMenuEvent, wrapper: (value: string) => any = (value) => value) =>
         (event: any) =>
             dispatch({ [key]: wrapper(event.currentTarget.value) });
@@ -21,7 +22,7 @@ export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
         (value: any) =>
             dispatch({ [key]: wrapper(value) });
     return <>
-        <div class="board__options">
+        {load_complete ? <div class="board__options">
             <MenuOptions visible={state.options_on && state.options === 'pen'}>
                 <MenuOption label="颜色">
                     <ColorPalette colors={PEN_COLORS} dispatch={mkcall('color')} />
@@ -30,7 +31,7 @@ export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
                     <WeightPalette weights={PEN_WEIGHTS} dispatch={mkcall('weight', parseFloat)} />
                 </MenuOption>
             </MenuOptions>
-        </div>
+        </div> : void 0}
         <div class="board__menu">
             <div class="board__submenu">
                 {state.fullscreen
@@ -38,7 +39,7 @@ export default function BoardMenu({ state, dispatch }: BoardMenuProps) {
                     : <BoardButton icon="arrows-maximize" label="全屏" value="1" onClick={mkevcb('fullscreen')} />
                 }
                 <BoardButton icon="cloud-share" label="分享" onClick={mkevcb('share')} />
-                {/* <BoardButton icon="location-share" label="加入" onClick={mkevcb('join')} /> */}
+                <BoardButton icon="location-share" label="加入" onClick={mkevcb('join')} />
                 <BoardButton icon="trash-x" label="清除" onClick={mkevcb('clear')} />
             </div>
             <div class="board__submenu">

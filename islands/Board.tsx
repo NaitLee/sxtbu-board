@@ -10,6 +10,7 @@ import EraserSprite from "../components/EraserSprite.tsx";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { BoardSyncClient } from "../common/sync-client.ts";
 import BoardShare from "../components/BoardShare.tsx";
+import BoardJoin from "../components/BoardJoin.tsx";
 
 interface BoardProps {
     name: string;
@@ -32,6 +33,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         fullscreen: false,
         eraser_size: MIN_ERASER_SIZE,
         share_on: false,
+        join_on: false,
     });
     const [data, set_data] = useState<BoardData>({
         pages: [updateObject({}, new_page())],
@@ -60,9 +62,14 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
     // just for syncing
     const [erase_points, set_erase_points] = useState<Point[]>([]);
     const ref_sync_client = useRef<BoardSyncClient>();
+    const [load_complete, set_load_complete] = useState(false);
+    useEffect(() => {
+        requestAnimationFrame(() => set_load_complete(true));
+    }, []);
     const sync = (data: BoardSyncData) => {
+        const send = (data: BoardSyncData) => ref_sync_client.current!.send(Object.assign(data, { page: state.page }));
         if (!ref_sync_client.current) return;
-        ref_sync_client.current.send(Object.assign(data, { page: state.page }));
+        send(data);
     };
     useEffect(() => {
         if (!name || !IS_BROWSER) return;
@@ -202,6 +209,11 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                     break;
                 case 'share':
                     new_state.share_on = !new_state.share_on;
+                    new_state.join_on = false;
+                    break;
+                case 'join':
+                    new_state.join_on = !new_state.join_on;
+                    new_state.share_on = false;
                     break;
             }
         }
@@ -213,10 +225,13 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         <link rel="stylesheet" href={css_path || '/board.css'} />
         <BoardCanvas page={page} size={size} />
         <BoardPad dispatch={board_pad_dispatch} size={size} state={state} />
-        <EraserSprite show={state.mode === 'erase'} size={state.eraser_size} offset={eraser_p} />
         <div class="board__logo" style={'background-image:url(\'' + (logo || BLANK_IMG_URL) + '\')'}></div>
+        <EraserSprite show={state.mode === 'erase'} size={state.eraser_size} offset={eraser_p} />
         <BoardLinks stroke_count={page.strokes.length} />
-        <BoardShare name={name} visible={state.share_on} />
-        <BoardMenu state={state} dispatch={board_menu_dispatch} />
+        {load_complete ? <>
+            <BoardShare name={name} visible={state.share_on} hide={() => set_state(updateObject(state, { share_on: false }))} />
+            <BoardJoin visible={state.join_on} hide={() => set_state(updateObject(state, { join_on: false }))} />
+        </> : void 0}
+        <BoardMenu state={state} dispatch={board_menu_dispatch} load_complete={load_complete} />
     </div>;
 }

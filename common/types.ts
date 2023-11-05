@@ -20,6 +20,7 @@ export interface BoardState {
     fullscreen: boolean;
     eraser_size: number;
     share_on: boolean;
+    join_on: boolean;
 }
 
 export interface Point {

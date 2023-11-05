@@ -191,7 +191,9 @@
     position: absolute;
     pointer-events: none;
     background-color: var(--board-menu-back);
-    transition: opacity 0.3s ease-out;
+    transition-property: opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
 }
 .board__eraser-sprite--hidden {
     opacity: 0;
@@ -218,7 +220,8 @@
     vertical-align: middle;
 }
 
-.board__share {
+.board__share,
+.board__join {
     grid-area: 1 / 1 / 4 / 4;
     margin: 5em 14em;
     padding: 2em;
@@ -230,15 +233,21 @@
     text-align: center;
     opacity: 0;
     transform: scale(0.5);
-    pointer-events: none;
     max-height: 90vw;
     transition-property: opacity, transform;
     transition-duration: 0.5s;
     transition-timing-function: ease;
+    pointer-events: none;
 }
-.board__share--visible {
+.board__join {
+    height: min-content;
+    padding: 2em 8px;
+}
+.board__share--visible,
+.board__join--visible {
     opacity: 1;
     transform: scale(1);
+    pointer-events: all;
 }
 .board__qr {
     width: 100%;
@@ -265,6 +274,31 @@
     margin: 8px 0;
 }
 
+.board__join-input {
+    width: 8em;
+    font-size: 2em;
+    background-color: transparent;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--board-menu-fore);
+    text-align: center;
+    display: inline-block;
+    margin: 1em;
+}
+
+.board__join-button {
+    width: 5em;
+    font-size: 1.8em;
+    background-color: transparent;
+    border-radius: 8px;
+    /* border: 1px solid var(--board-menu-back); */
+    border: none;
+    box-shadow: 0 0 4px var(--board-menu-fore);
+    text-align: center;
+    display: inline-block;
+    /* margin: 1em; */
+}
+
 @media (max-width: 960px) {
     :root {
         --board-menu-height: 64px;
@@ -273,7 +307,8 @@
     .board {
         font-size: 0.9em;
     }
-    .board__share {
+    .board__share,
+    .board__join {
         margin: calc(var(--board-menu-height) + 16px);
         margin-right: 8px;
     }
