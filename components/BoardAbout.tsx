@@ -22,6 +22,6 @@ export default function BoardAbout({ visible, hide }: BoardAboutProps) {
                 />
             </a>
         </p>
-        <p><button class="board__join-button" onClick={hide}>确定</button></p>
+        <p><button class="board__big-button" onClick={hide}>确定</button></p>
     </div>;
 }

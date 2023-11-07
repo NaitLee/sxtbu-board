@@ -26,6 +26,10 @@
     left: 0;
     top: 0;
 }
+.board a:any-link {
+    color: var(--board-back);
+    text-decoration: none;
+}
 
 .board .icon {
     width: 32px;
@@ -155,7 +159,7 @@
     align-items: center;
     margin-top: 8px;
 }
-.board__link:any-link {
+a.board__link:any-link {
     color: var(--board-menu-fore);
     text-decoration: none;
 }
@@ -243,7 +247,8 @@
     transition-timing-function: ease;
     pointer-events: none;
 }
-.board__join {
+.board__join,
+.board__about {
     height: min-content;
     padding: 2em 8px;
 }
@@ -294,17 +299,15 @@
     margin: 1em;
 }
 
-.board__join-button {
+.board__big-button {
     width: 5em;
     font-size: 1.8em;
     background-color: transparent;
     border-radius: 8px;
-    /* border: 1px solid var(--board-menu-back); */
-    border: none;
-    box-shadow: 0 0 4px var(--board-menu-fore);
+    border: 1px solid var(--board-menu-fore);
+    box-shadow: 0 3px 0 var(--board-menu-fore);
     text-align: center;
     display: inline-block;
-    /* margin: 1em; */
 }
 
 .board__fresh-logo {
@@ -320,7 +323,8 @@
         font-size: 0.9em;
     }
     .board__share,
-    .board__join {
+    .board__join,
+    .board__about {
         margin: calc(var(--board-menu-height) + 16px);
         margin-right: 8px;
     }

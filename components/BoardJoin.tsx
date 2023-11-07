@@ -14,7 +14,7 @@ export default function BoardJoin({ visible, hide }: BoardJoinProps) {
             onChange={event => set_name(event.currentTarget.value)}
             placeholder="留空则随机"
         /></div>
-        <div><button class="board__join-button" onClick={() => {
+        <div><button class="board__big-button" onClick={() => {
             location.assign('/' + name);
         }}>加入</button></div>
     </div>;
