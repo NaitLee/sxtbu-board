@@ -45,13 +45,13 @@ export default function BoardMenu({ state, uistate, dispatch, load_complete }: B
         {load_complete ? <div class="board__options">
             <MenuOptions visible={uistate.options_on && uistate.options === 'pen'}>
                 <MenuOption label="颜色">
-                    <ColorPalette colors={PEN_COLORS} dispatch={mkstcb('color')} />
+                    <ColorPalette colors={PEN_COLORS} dispatch={mkstcall('color')} />
                 </MenuOption>
                 <MenuOption label="粗细">
-                    <WeightPalette weights={PEN_WEIGHTS} dispatch={mkstcb('weight', parseFloat)} />
+                    <WeightPalette weights={PEN_WEIGHTS} dispatch={mkstcall('weight', parseFloat)} />
                 </MenuOption>
                 <MenuOption label="主题">
-                    <ColorPalette colors={Object.keys(THEMES)} dispatch={mkuicb('theme')} />
+                    <ColorPalette colors={Object.keys(THEMES)} dispatch={mkuicall('theme')} />
                 </MenuOption>
             </MenuOptions>
             <MenuOptions visible={uistate.options_on && uistate.options === 'erase'}>

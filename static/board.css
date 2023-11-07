@@ -181,7 +181,7 @@
     text-align: end;
 }
 .board__dd {
-    max-width: 15em;
+    width: 14.5em;
 }
 .board__input {
     display: inline-block;
