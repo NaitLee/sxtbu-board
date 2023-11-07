@@ -69,9 +69,9 @@ export default function BoardMenu({ state, uistate, dispatch, load_complete }: B
                 <BoardButton icon="info-square-rounded" label="关于" onClick={mkdpcb('about')} />
             </div>
             <div class="board__submenu">
-                <BoardButton icon="hand-move" label="移动" selected={state.mode === 'move'} value="move" onClick={mkstcb('mode')} />
-                <BoardButton icon="pencil" label="笔" selected={state.mode === 'pen'} value="pen" onClick={mkstcb('mode')} />
-                <BoardButton icon="eraser" label="擦除" selected={state.mode === 'erase'} value="erase" onClick={mkstcb('mode')} />
+                <BoardButton icon="hand-move" label="移动" selected={state.mode === 'move'} value="move" onClick={mkdpcb('mode')} />
+                <BoardButton icon="pencil" label="笔" selected={state.mode === 'pen'} value="pen" onClick={mkdpcb('mode')} />
+                <BoardButton icon="eraser" label="擦除" selected={state.mode === 'erase'} value="erase" onClick={mkdpcb('mode')} />
                 <BoardButton icon="arrow-back-up" label="撤销" onClick={mkdpcb('undo')} />
             </div>
             <div class="board__submenu">

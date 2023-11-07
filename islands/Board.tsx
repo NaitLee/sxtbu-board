@@ -192,10 +192,11 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         for (const key in event) {
             switch (key) {
                 case 'mode':
-                    uistate.options = event.mode!;
                     if (state.mode === event.mode!) {
+                        uistate.options = event.mode!;
                         uistate.options_on = !uistate.options_on;
                     } else uistate.options_on = false;
+                    state.mode = event.mode!;
                     break;
                 case 'page':
                     goto_page(event.page!);
