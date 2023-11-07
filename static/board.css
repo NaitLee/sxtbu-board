@@ -105,6 +105,7 @@
     pointer-events: none;
 }
 .board__menu-options {
+    text-align: center;
     position: absolute;
     pointer-events: all;
     width: 24em;
@@ -223,7 +224,8 @@
 }
 
 .board__share,
-.board__join {
+.board__join,
+.board__about {
     grid-area: 1 / 1 / 4 / 4;
     margin: 5em 14em;
     padding: 2em;
@@ -245,8 +247,12 @@
     height: min-content;
     padding: 2em 8px;
 }
+.board__about > * {
+    margin: 0.5em 0;
+}
 .board__share--visible,
-.board__join--visible {
+.board__join--visible,
+.board__about--visible {
     opacity: 1;
     transform: scale(1);
     pointer-events: all;
@@ -299,6 +305,10 @@
     text-align: center;
     display: inline-block;
     /* margin: 1em; */
+}
+
+.board__fresh-logo {
+    display: inline;
 }
 
 @media (max-width: 960px) {

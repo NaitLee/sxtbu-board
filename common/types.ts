@@ -14,13 +14,17 @@ export interface BoardState {
     color: string;
     weight: number;
     mode: BoardMode;
+    page: number;
+    eraser_size: number;
+}
+
+export interface UiState {
     options: BoardOptionsKey;
     options_on: boolean;
-    page: number;
-    fullscreen: boolean;
-    eraser_size: number;
     share_on: boolean;
     join_on: boolean;
+    about_on: boolean;
+    fullscreen: boolean;
     theme: string;
 }
 
@@ -56,13 +60,16 @@ export interface BoardPadEvent {
     erase_done?: boolean;
 }
 
-export interface BoardMenuEvent extends Partial<BoardState> {
+export interface BoardMenuEvent {
+    mode?: BoardMode;
+    page?: number;
     new_page?: boolean;
     undo?: boolean;
     clear?: boolean;
     share?: boolean;
     join?: boolean;
     theme?: string;
+    about?: boolean;
 }
 
 export interface BoardSyncData {

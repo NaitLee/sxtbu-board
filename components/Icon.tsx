@@ -18,6 +18,7 @@ import IconArrowsMaximize from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/a
 import IconArrowsMinimize from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/arrows-minimize.tsx";
 import IconCloudShare from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/cloud-share.tsx";
 import IconLocationShare from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/location-share.tsx";
+import IconInfoSquareRounded from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/info-square-rounded.tsx";
 
 export type IconKey = keyof typeof Icons;
 
@@ -48,6 +49,7 @@ export const Icons = {
     'arrows-minimize': IconArrowsMinimize,
     'cloud-share': IconCloudShare,
     'location-share': IconLocationShare,
+    'info-square-rounded': IconInfoSquareRounded,
 };
 
 export default function Icon(props: IconProps) {

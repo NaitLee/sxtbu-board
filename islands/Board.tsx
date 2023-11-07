@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import BoardCanvas from "../components/BoardCanvas.tsx";
 import BoardMenu from "../components/BoardMenu.tsx";
 import BoardPad from "../components/BoardPad.tsx";
-import { BoardMenuEvent, BoardPadEvent, BoardState, BoardSyncData, Point, Stroke } from "../common/types.ts";
+import { BoardMenuEvent, BoardPadEvent, BoardState, BoardSyncData, Point, Stroke, UiState } from "../common/types.ts";
 import { BoardData } from "../common/types.ts";
 import { BLANK_IMG_URL, DEF_STROKE_COLOR, DEF_STROKE_WEIGHT, MIN_ERASER_SIZE, filterPoints, new_page, offset, offsetPoints, point, toggleClassName, updateObject } from "../common/utils.tsx";
 import BoardLinks from "../components/BoardLinks.tsx";
@@ -12,6 +12,7 @@ import { BoardSyncClient } from "../common/sync-client.ts";
 import BoardShare from "../components/BoardShare.tsx";
 import BoardJoin from "../components/BoardJoin.tsx";
 import BoardTheme from "../components/BoardTheme.tsx";
+import BoardAbout from "../components/BoardAbout.tsx";
 
 interface BoardProps {
     name: string;
@@ -28,14 +29,17 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         color: DEF_STROKE_COLOR,
         weight: DEF_STROKE_WEIGHT,
         mode: 'pen',
+        page: 0,
+        eraser_size: MIN_ERASER_SIZE,
+    });
+    const [uistate, set_uistate] = useState<UiState>({
+        fullscreen: false,
         options: '',
         options_on: false,
-        page: 0,
-        fullscreen: false,
-        eraser_size: MIN_ERASER_SIZE,
         share_on: false,
         join_on: false,
-        theme: ''
+        theme: '',
+        about_on: false,
     });
     const [data, set_data] = useState<BoardData>({
         pages: [updateObject({}, new_page())],
@@ -68,6 +72,10 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
     useEffect(() => {
         requestAnimationFrame(() => set_load_complete(true));
     }, []);
+    const update_state = () => {
+        set_state(Object.assign({}, state));
+        set_uistate(Object.assign({}, uistate));
+    };
     const sync = (data: BoardSyncData) => {
         const send = (data: BoardSyncData) => ref_sync_client.current!.send(Object.assign(data, { page: state.page }));
         if (!ref_sync_client.current) return;
@@ -87,7 +95,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                     */
                     case 'data':
                         set_data(updateObject(sdata, sdata.data!));
-                        set_state(sdata.data!.state);
+                        // set_state(sdata.data!.state);
                         break;
                     case 'stroke':
                         page.strokes.push(sdata.stroke!);
@@ -100,9 +108,6 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                         // always new
                         page = new_page();
                         data.pages.splice(n, 0, page);
-                        break;
-                    case 'move':
-                        // move is client side, not synced
                         break;
                     case 'undo':
                         page.strokes.pop();
@@ -118,6 +123,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                 }
             }
             set_page(updateObject({}, page));
+            update_state();
         });
     }, []);
     const ref_board = useRef<HTMLDivElement | null>(null);
@@ -128,16 +134,17 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
         })), []);
     useEffect(() => {
         if (!ref_board.current) return;
-        if (state.fullscreen && !document.fullscreenElement)
+        if (uistate.fullscreen && !document.fullscreenElement)
             ref_board.current.requestFullscreen();
         else if (document.fullscreenElement)
             document.exitFullscreen();
-    }, [state.fullscreen]);
+        update_state();
+    }, [uistate.fullscreen]);
     const board_pad_dispatch = (event: BoardPadEvent) => {
         for (const key in event) {
             switch (key) {
                 case 'start':
-                    state.options_on = state.share_on = false;
+                    uistate.options_on = uistate.share_on = false;
                     break;
                 case 'points':
                     for (const points of event.points!) {
@@ -158,8 +165,8 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                     state.mode = 'erase';
                     break;
                 case 'erase':
+                    set_eraser_p(updateObject({}, event.erase!)); // don't offset sprite
                     offset(event.erase!, page.offset);
-                    set_eraser_p(event.erase!);
                     for (let i = 0; i < page.strokes.length; ++i) {
                         const stroke = page.strokes[i];
                         stroke.points = filterPoints(stroke.points, event.erase!, state.eraser_size / 2);
@@ -179,17 +186,16 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
             }
             set_page(updateObject({}, page));
         }
+        update_state();
     };
     const board_menu_dispatch = (event: BoardMenuEvent) => {
-        const new_state = updateObject(state, event);
         for (const key in event) {
             switch (key) {
                 case 'mode':
-                    if (state.mode === new_state.mode) {
-                        new_state.options = new_state.mode;
-                        new_state.options_on = !state.options_on;
-                    } else
-                        new_state.options_on = false;
+                    uistate.options = event.mode!;
+                    if (state.mode === event.mode!) {
+                        uistate.options_on = !uistate.options_on;
+                    } else uistate.options_on = false;
                     break;
                 case 'page':
                     goto_page(event.page!);
@@ -210,34 +216,43 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                     sync({ clear: true });
                     break;
                 case 'share':
-                    new_state.share_on = !new_state.share_on;
-                    new_state.join_on = false;
+                    uistate.share_on = !uistate.share_on;
+                    uistate.join_on = false;
+                    uistate.about_on = false;
                     break;
                 case 'join':
-                    new_state.join_on = !new_state.join_on;
-                    new_state.share_on = false;
+                    uistate.join_on = !uistate.join_on;
+                    uistate.share_on = false;
+                    uistate.about_on = false;
+                    break;
+                case 'about':
+                    uistate.about_on = !uistate.about_on;
+                    uistate.share_on = false;
+                    uistate.join_on = false;
                     break;
                 case 'theme':
-                    new_state.theme = event.theme!;
+                    uistate.theme = event.theme!;
                     break;
             }
         }
-        set_state(new_state);
+        update_state();
     };
     return <div ref={ref_board} class={toggleClassName('board', { '--maximized': maximize })}
         style={size.x && size.y ? `width:${size.x}px;height:${size.y}px` : 'width:100%;height:100%;'}
     >
         <link rel="stylesheet" href={css_path || '/board.css'} />
-        <BoardTheme name={state.theme} />
+        <BoardTheme name={uistate.theme} />
         <BoardCanvas page={page} size={size} />
         <BoardPad dispatch={board_pad_dispatch} size={size} state={state} />
         <div class="board__logo" style={'background-image:url(\'' + (logo || BLANK_IMG_URL) + '\')'}></div>
         <EraserSprite show={state.mode === 'erase'} size={state.eraser_size} offset={eraser_p} />
         <BoardLinks stroke_count={page.strokes.length} />
         {load_complete ? <>
-            <BoardShare name={name} visible={state.share_on} hide={() => set_state(updateObject(state, { share_on: false }))} />
-            <BoardJoin visible={state.join_on} hide={() => set_state(updateObject(state, { join_on: false }))} />
+            <BoardShare name={name} visible={uistate.share_on} hide={() => set_uistate(updateObject(uistate, { share_on: false }))} />
+            <BoardJoin visible={uistate.join_on} hide={() => set_uistate(updateObject(uistate, { join_on: false }))} />
+            <BoardAbout visible={uistate.about_on} hide={() => set_uistate(updateObject(uistate, { about_on: false }))} />
         </> : void 0}
-        <BoardMenu state={state} dispatch={board_menu_dispatch} load_complete={load_complete} />
+        <BoardMenu state={state} uistate={uistate} dispatch={board_menu_dispatch}
+            load_complete={load_complete} />
     </div>;
 }
