@@ -123,7 +123,7 @@ export default function Board({ maximize, css_path, width, height, logo, name, a
                 }
             }
             set_page(updateObject({}, page));
-            update_state();
+            // update_state();
         });
     }, []);
     const ref_board = useRef<HTMLDivElement | null>(null);

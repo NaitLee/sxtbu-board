@@ -8,7 +8,7 @@ interface BoardAboutProps {
 export default function BoardAbout({ visible, hide }: BoardAboutProps) {
     return <div class={toggleClassName("board__about", { '--visible': visible })}>
         <h2>关于</h2>
-        <p>工商白板</p>
+        <p>乐思白板</p>
         <p>版权所有 © 山西工商学院，保留所有权利。</p>
         <p>以 <a href="https://www.gnu.org/licenses/agpl-3.0.html">GNU Affero 通用公共许可证第 3 版</a>授权。<br />您也可以使用更新的版本。</p>
         <p>

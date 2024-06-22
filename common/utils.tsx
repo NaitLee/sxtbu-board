@@ -1,3 +1,4 @@
+import { getConfig } from "./read-config.ts";
 import { BoardPage, Point, Stroke } from "./types.ts";
 
 export const INDEX_SPECIFY_SESSION_NAME = true;
@@ -5,7 +6,7 @@ export const SESSION_NAME_LEN = 6;
 export const DEF_STROKE_COLOR = 'var(--board-stroke)';
 export const DEF_STROKE_WEIGHT = 4;
 export const BLANK_IMG_URL = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"></svg>';
-export const MIN_ERASER_SIZE = 120;
+export const MIN_ERASER_SIZE = 160;
 export const THR_TOGGLE_ERASER = 2;
 export const PEN_COLORS = [
     DEF_STROKE_COLOR, 'red', '#3333ff', '#00ff00',
@@ -21,6 +22,8 @@ export const THEMES = {
     '#faf9de': ['#faf9de', '#484848', 'invert(1)'],
     '#eaeaef': ['#eaeaef', '#202020', 'invert(1)'],
 };
+
+export const Config = await getConfig();
 
 export function updateObject<T, K>(a: T, b: K): T & K {
     return Object.assign({}, a, b);

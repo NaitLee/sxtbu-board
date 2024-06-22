@@ -2,34 +2,22 @@
   "lock": false,
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "start": "deno run -A --watch=static/,routes/ --unstable dev.ts",
+    "start": "deno run -A --watch=static/,routes/ --unstable-broadcast-channel dev.ts",
     "build": "deno run -A dev.ts build",
-    "preview": "deno run -A --unstable main.ts",
+    "preview": "deno run -A --unstable-broadcast-channel main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
-  "lint": {
-    "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
-    }
-  },
-  "exclude": [
-    "**/_fresh/*"
-  ],
+  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
+  "exclude": ["**/_fresh/*"],
   "imports": {
-    "$fresh/": "https://deno.land/x/fresh@1.5.2/",
-    "preact": "https://esm.sh/preact@10.18.1",
-    "preact/": "https://esm.sh/preact@10.18.1/",
+    "$fresh/": "https://deno.land/x/fresh@1.6.8/",
+    "preact": "https://esm.sh/preact@10.19.6",
+    "preact/": "https://esm.sh/preact@10.19.6/",
     "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.2.2",
-    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
-    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "$std/": "https://deno.land/std@0.193.0/",
     "qrcode": "https://deno.land/x/qrcode@v2.0.0/qrcode.js"
   },
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
-  }
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" }
 }

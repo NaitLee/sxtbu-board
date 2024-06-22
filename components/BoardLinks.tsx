@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { toggleClassName } from "../common/utils.tsx";
+import { Config, toggleClassName } from "../common/utils.tsx";
 import BoardButton from "./BoardButton.tsx";
 import Icon, { type IconKey } from "./Icon.tsx";
 
@@ -14,6 +14,7 @@ interface BoardLinksProps {
     stroke_count?: number;
 }
 
+/*
 const LINKS: Link[] = [
     // { icon: '', url: '', label: '' },
     { icon: 'search', url: 'https://www.baidu.com/', label: '百度搜索' },
@@ -21,6 +22,22 @@ const LINKS: Link[] = [
     { icon: 'cast', url: 'http://x.chaoxing.com/', label: '学习通投屏' },
     { icon: 'planet', url: 'https://i.chaoxing.com/', label: '学习通空间' },
 ];
+*/
+
+const LINKS: Link[] = [];
+{
+    let link_n = 1;
+    while (true) {
+        const thing = Config['link_' + link_n];
+        if (!thing) break;
+        LINKS.push({
+            icon: thing[0] as IconKey,
+            url: thing[1],
+            label: thing[2] || thing[1],
+        });
+        link_n += 1;
+    }
+}
 
 function BoardLink({ icon, url, label }: Link) {
     return <a class="board__link" href={url} target="_blank">

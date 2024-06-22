@@ -1,10 +1,10 @@
 import { Head } from "$fresh/runtime.ts";
 import { BoardSyncServer, getSyncServer } from "../common/sync-server.ts";
-import { SESSION_NAME_LEN, randcode } from "../common/utils.tsx";
-import { HandlerContext, Status } from "$fresh/server.ts";
+import { Config, SESSION_NAME_LEN, randcode } from "../common/utils.tsx";
+import { FreshContext } from "$fresh/server.ts";
 import Board from "../islands/Board.tsx";
 
-export const handler = (req: Request, ctx: HandlerContext): Response | Promise<Response> => {
+export const handler = (req: Request, ctx: FreshContext): Response | Promise<Response> => {
     const url = new URL(req.url);
     const name = url.pathname.slice(1);
     if ((name !== '' && name.length !== SESSION_NAME_LEN)
@@ -12,7 +12,7 @@ export const handler = (req: Request, ctx: HandlerContext): Response | Promise<R
         || !name.split('').every(c => '0123456789'.includes(c))
     )
         return new Response(null, {
-            status: Status.Found,
+            status: 302,
             headers: { 'Location': '/' }
         });
     else
@@ -25,8 +25,8 @@ export default function Home({ url }: { url: URL }) {
         new BoardSyncServer(name);
     return <>
         <Head>
-            <title>工商白板</title>
+            <title>{Config.brand_title || '乐思白板'}</title>
         </Head>
-        <Board maximize={true} logo="/watermark.svg" css_path="/board.css" name={name} />
+        <Board maximize={true} logo={Config.brand_logo[0] || "logo.svg"} css_path="/board.css" name={name} />
     </>;
 }

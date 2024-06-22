@@ -1,0 +1,11 @@
+host ""
+port 8298
+
+brand_title 乐思白板——山西工商学院
+brand_logo sxtbu.svg
+
+# link_x <icon> <url> <label>
+link_1 search https://www.baidu.com/ 百度搜索
+link_2 brand-wechat https://filehelper.weixin.qq.com/ 微信文件传输
+link_3 cast http://x.chaoxing.com/ 学习通投屏
+link_4 planet https://i.chaoxing.com/ 学习通空间

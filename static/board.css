@@ -314,7 +314,7 @@ a.board__link:any-link {
     display: inline;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1200px) {
     :root {
         --board-menu-height: 64px;
         --board-menu-button-width: 72px;
@@ -330,8 +330,13 @@ a.board__link:any-link {
     }
 }
 
-@media (max-width: 840px) {
+@media (max-width: 900px) {
+    :root {
+        --board-menu-height: 60px;
+        --board-menu-button-width: 60px;
+    }
     .board {
+        font-size: 0.8em;
         grid-template: 
             ". . ." 25vh
             ". . ." 25vh
