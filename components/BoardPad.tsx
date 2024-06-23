@@ -21,8 +21,8 @@ interface InputCallbackArgs {
     ex: number;
     ey: number;
     id: number;
-    // force: number;
-    // angle: number;
+    force: number;
+    angle: number;
     is_touch: boolean;
 }
 
@@ -38,16 +38,16 @@ function callbackArgsFromTouches(touches: TouchList): InputCallbackArgs[] {
         is_touch: true
     }));
 }
-function callbackArgsFromMouse(mouse: MouseEvent): InputCallbackArgs[] {
+function callbackArgsFromPointer(pointer: PointerEvent): InputCallbackArgs[] {
     return [{
-        x: mouse.clientX,
-        y: mouse.clientY,
-        ex: 1,
-        ey: 1,
-        id: 0,
-        // force: 1,
-        // angle: 0,
-        is_touch: false
+        x: pointer.clientX,
+        y: pointer.clientY,
+        ex: pointer.width || 1,
+        ey: pointer.height || 1,
+        id: pointer.pointerId,
+        force: pointer.pressure || 1,
+        angle: pointer.twist || 0,
+        is_touch: pointer.pointerType === 'touch'
     }];
 }
 
@@ -85,7 +85,7 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                 }
                 for (const arg of args) {
                     const { x, y, id, ex, ey } = arg;
-                    if (Math.max(ex, ey) > THR_TOGGLE_ERASER) {
+                    if (Math.max(ex, ey) > THR_TOGGLE_ERASER && !(ex === 50 && ey === 50)) {
                         dispatch({
                             toggle_erase: true,
                             eraser_size: MIN_ERASER_SIZE // Math.max(ex, ey, MIN_ERASER_SIZE)
@@ -184,22 +184,24 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
     const ontouchend = (event: TouchEvent) => {
         callback.up(callbackArgsFromTouches(event.touches));
     };
-    const onmousedown = (event: MouseEvent) => {
-        callback.down(callbackArgsFromMouse(event));
+    const ondown = (event: PointerEvent) => {
+        callback.down(callbackArgsFromPointer(event));
     };
-    const onmousemove = (event: MouseEvent) => {
-        callback.move(callbackArgsFromMouse(event));
+    const onmove = (event: PointerEvent) => {
+        callback.move(callbackArgsFromPointer(event));
     };
-    const onmouseup = (event: MouseEvent) => {
-        callback.up(callbackArgsFromMouse(event));
+    const onup = (event: PointerEvent) => {
+        callback.move(callbackArgsFromPointer(event));
+        callback.up([]);
     };
-    const oncontextmenu = (event: MouseEvent) => {
+    const prevent = (event: Event) => {
         event.preventDefault();
+        event.stopPropagation();
     };
     return <svg class="board__pad" stroke-linecap="round" stroke-linejoin="round" fill="none"
-        width={size.x || '100%'} height={size.y || '100%'} onContextMenu={oncontextmenu}
-        onTouchStart={ontouchstart} onTouchMove={ontouchmove} onTouchEnd={ontouchend} onTouchCancel={ontouchend}
-        onMouseDown={onmousedown} onMouseMove={onmousemove} onMouseUp={onmouseup}
+        width={size.x || '100%'} height={size.y || '100%'} onContextMenu={prevent} onResize={prevent} onScroll={prevent}
+        onTouchStart={ontouchstart} //onTouchMove={ontouchmove} onTouchEnd={ontouchend} onTouchCancel={ontouchend}
+        onPointerDown={ondown} onPointerMove={onmove} onPointerUp={onup} onPointerCancel={onup}
     >
         {points.map(points => <MemoPath stroke={{ points: points, color: state.color, weight: state.weight }} />)}
     </svg>;

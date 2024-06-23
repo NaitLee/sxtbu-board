@@ -43,6 +43,7 @@
 .board__pad {
     grid-area: 1 / 1 / 4 / 4;
     background-color: transparent;
+    touch-action: none;
 }
 .board__logo {
     grid-area: 1 / 1 / 4 / 4;

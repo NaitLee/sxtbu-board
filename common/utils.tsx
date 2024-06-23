@@ -6,8 +6,8 @@ export const SESSION_NAME_LEN = 6;
 export const DEF_STROKE_COLOR = 'var(--board-stroke)';
 export const DEF_STROKE_WEIGHT = 4;
 export const BLANK_IMG_URL = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"></svg>';
-export const MIN_ERASER_SIZE = 160;
-export const THR_TOGGLE_ERASER = 2;
+export const MIN_ERASER_SIZE = 120;
+export const THR_TOGGLE_ERASER = 4;
 export const PEN_COLORS = [
     DEF_STROKE_COLOR, 'red', '#3333ff', '#00ff00',
     '#ff00ff', 'yellow', 'orange', 'cyan',
