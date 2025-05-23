@@ -85,12 +85,15 @@ export default function BoardPad({ dispatch, size, state }: BoardPadProps) {
                 }
                 for (const arg of args) {
                     const { x, y, id, ex, ey } = arg;
+                    // ex and ey are heavily device dependent
+                    /*
                     if (Math.max(ex, ey) > THR_TOGGLE_ERASER && !(ex === 50 && ey === 50)) {
                         dispatch({
                             toggle_erase: true,
                             eraser_size: MIN_ERASER_SIZE // Math.max(ex, ey, MIN_ERASER_SIZE)
                         });
                     }
+                    */
                     const index = ref_touchcount.current++;
                     update_points(index, point(x, y));
                     ref_touchmap.current[id] = index;
