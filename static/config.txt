@@ -1,8 +1,8 @@
 host ""
 port 8298
 
-brand_title 乐思白板——山西工商学院
-brand_logo sxtbu.svg
+brand_title 乐思白板
+brand_logo
 
 # link_x <icon> <url> <label>
 link_1 search https://www.baidu.com/ 百度搜索
